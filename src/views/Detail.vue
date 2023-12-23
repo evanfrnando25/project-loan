@@ -7,7 +7,7 @@
             </div>
             <div class="detail__description">
                 <div class="download-document">
-                    <button>Download Document</button>
+                    <button @click="downloadDocument(detailLoan.document)">Download Document</button>
                 </div>
                 <div class="form">
                     <div class="section">
@@ -69,6 +69,7 @@ export default defineComponent({
                    {label: "Purpose", value: detail.purpose},
                    {label: "Risk Rating", value: detail.riskRating}
                    ],
+                   document: detail.documents[0].url,
                    termLoan: detail.repaymentSchedule.installments,
                    borrower: [
                        { label: "Id", value: detail.borrower.id },
@@ -81,6 +82,10 @@ export default defineComponent({
                }
            }
         })
+
+        const downloadDocument = (code: string) => {
+         window.open(code, '_blank', 'noreferrer')
+      }
 
         const columns = ref([
          { name: "dueDate", label: "Due Date", field: "dueDate", align: "center" },
@@ -99,7 +104,8 @@ export default defineComponent({
             loading,
             error,
             route,
-            columns
+            columns,
+            downloadDocument,
         }
     }
 })
