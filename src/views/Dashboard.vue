@@ -28,16 +28,15 @@ export default defineComponent({
       { name: "id", label: "ID Transaction", field: "id", align: "center" },
       { name: "amount", label: "Loan Amount", field: "amount", align: "center", sortable: true },
       { name: "interestRate", label: "Interest Rate", field: "interestRate", align: "center", sortable: true },
+      { name: "term", label:"Term", field: "term", align: "center", sortable: true}
     ]);
 
     const extendHeader = ref([
       { id: 1, value: "Name" },
-      { id: 2, value: "Term" }
     ])
 
     const extendBody = ref([
       { id: 1, field: "borrower", value: "name"},
-      { id: 2, value: "term" }
     ])
 
     const detailLoan = (index: any) => {
