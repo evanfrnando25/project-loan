@@ -19,7 +19,7 @@
                                 </div>
                             </div>
                             <div class="repayment-schedule">
-                                 <span>Repayment Schedule</span>
+                                <span>Repayment Schedule</span>
                                 <CommonTable :data="detailLoan.termLoan" :columns="columns" />
                             </div>
                         </div>
