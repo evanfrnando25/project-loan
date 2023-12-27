@@ -4,17 +4,17 @@ import vue from '@vitejs/plugin-vue'
 import { quasar, transformAssetUrls} from "@quasar/vite-plugin"
 
 export default defineConfig({
-  base: '',
-  server: {
-    proxy: {
-      '/api': {
-        target: "https://raw.githubusercontent.com/andreascandle/p2p_json_test/main/api/json/loans.json",
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/,''),
-        secure: false,
-      }
-    }
-  },
+  base: '/dashboard',
+  // server: {
+  //   proxy: {
+  //     '/api': {
+  //       target: "https://raw.githubusercontent.com/andreascandle/p2p_json_test/main/api/json/loans.json",
+  //       changeOrigin: true,
+  //       rewrite: (path) => path.replace(/^\/api/,''),
+  //       secure: false,
+  //     }
+  //   }
+  // },
   plugins: [
     vue({
       template: {transformAssetUrls}
