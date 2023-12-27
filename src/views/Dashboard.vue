@@ -1,9 +1,7 @@
 <template>
  <div class="table">
    <div class="wrapper">
-     <h1>asd</h1>
-     {{ data }}
-        <!-- <CommonTable v-if="data" :data="data" :loading="loading" :columnsTable="columns" :extendHeader="extendHeader" :extendBody="extendBody" @detailLoan="detailBorrower" filter action /> -->
+        <CommonTable v-if="data" :data="data" :loading="loading" :columnsTable="columns" :extendHeader="extendHeader" :extendBody="extendBody" @detailLoan="detailBorrower" filter action />
    </div>
  </div>
 </template>
@@ -12,7 +10,7 @@
 
 import {defineComponent, onMounted, ref} from 'vue'
 import { useRouter } from "vue-router"
-import useDog from '@/composables/useDog'
+import useDashboard from "@/composables/useDashboard"
 import CommonTable from "@/components/common/Table.vue"
 import { QTableColumn } from 'quasar'
 
@@ -26,9 +24,7 @@ export default defineComponent({
     const router = useRouter();
     const filter = ref("")
 
-    const { data , loading, error, fetchData} = useDog();
-
-    // const { data , loading, error, fetchData} = useDashboard();
+    const { data , loading, error, fetchData} = useDashboard();
 
     const columns = ref<QTableColumn[]>([
       { name: "id", label: "ID Transaction", field: "id", align: "center" },

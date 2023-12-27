@@ -10,7 +10,7 @@ const useDashboard = () => {
     const fetchData = async () => {
         loading.value = true;
         try {
-            const response = await axios.get('/api')
+            const response = await axios.get('https://raw.githubusercontent.com/andreascandle/p2p_json_test/main/api/json/loans.json')
             data.value = response.data
         } catch (error: any){
             error.value = error
