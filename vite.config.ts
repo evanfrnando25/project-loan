@@ -8,7 +8,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: "https://raw.githubusercontent.com/andreascandle/p2p_json_test/main/api/json/loans.json",
+        target: "http://raw.githubusercontent.com/andreascandle/p2p_json_test/main/api/json/loans.json",
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/,'')
       }
