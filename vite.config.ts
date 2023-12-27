@@ -4,6 +4,7 @@ import vue from '@vitejs/plugin-vue'
 import { quasar, transformAssetUrls} from "@quasar/vite-plugin"
 
 export default defineConfig({
+  base: '/app/',
   server: {
     proxy: {
       '/api': {
@@ -22,12 +23,9 @@ export default defineConfig({
     })
   ],
   resolve: {
-    alias: [
-      {
-        find: "@",
-        replacement: resolve(__dirname, "./src")
-      }
-    ]
+    alias: {
+      '@': resolve(__dirname, './src')
+    }
   },
   optimizeDeps: {
     exclude: ['./node_modules']
