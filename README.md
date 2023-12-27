@@ -6,3 +6,8 @@ HOW TO RUN :
 -   use pnpm
 -   pnpm install
 -   pnpm dev
+
+HOW TO BUILD:
+
+-   pnpm build
+-   pnpm preview
