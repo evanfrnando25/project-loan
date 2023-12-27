@@ -8,9 +8,10 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: "http://raw.githubusercontent.com/andreascandle/p2p_json_test/main/api/json/loans.json",
+        target: "https://raw.githubusercontent.com/andreascandle/p2p_json_test/main/api/json/loans.json",
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/,'')
+        rewrite: (path) => path.replace(/^\/api/,''),
+        secure: false,
       }
     }
   },
