@@ -1,5 +1,5 @@
 <template>
-    <div class="detail" v-if="data">
+    <div class="detail" v-if="detailLoan">
         <div class="wrapper">
             <div class="detail__title">
                 <span>ID Transaction: <br /></span>
@@ -13,23 +13,23 @@
                     <div class="section">
                         <div class="highlight">
                             <div class="wrapper">
-                                <div v-for="items in detailLoan.highlight" :key="items" class="content" >
+                                <div v-for="items in detailLoan.highlight" :key="items.label" class="content" >
                                     <span>{{ items.label }}</span>
                                     <span>{{ items.value }}</span>
                                 </div>
                             </div>
                             <div class="repayment-schedule">
                                  <span>Repayment Schedule</span>
-                                <CommonTable :data="detailLoan.termLoan" :columns="columns" />
+                                <CommonTable :data="detailLoan.termLoan" :columnsTable="columns" />
                             </div>
                         </div>
                         <div class="detail-borrower">
                             <span class="title">Detail Borrower</span>
                             <hr />
                             <div class="wrapper">
-                                <div v-for="items in detailLoan.borrower" :key="items" class="content" >
-                                    <span>{{ items.label }}</span>
-                                    <span>{{ items.value }}</span>
+                                <div v-for="items in detailLoan.borrower" :key="items.label" class="content" >
+                                    <span>{{ items?.label }}</span>
+                                    <span>{{ items?.value }}</span>
                                 </div>
                             </div>
                         </div>
@@ -45,6 +45,39 @@ import { defineComponent, computed , onMounted, ref} from "vue"
 import { useRoute } from "vue-router"
 import useDashboard from '@/composables/useDashboard'
 import CommonTable from "@/components/common/Table.vue"
+import { QTableColumn } from 'quasar'
+
+
+interface LoanData {
+  id: string;
+  amount: number;
+  interestRate: number;
+  term: number;
+  purpose: string;
+  riskRating: string;
+  borrower: {
+    id: string;
+    name: string;
+    email: string;
+    creditScore: number;
+  };
+  collateral: {
+    type: string;
+    value: number;
+  };
+  documents: { url: string }[];
+  repaymentSchedule?: {
+    installments: any[]; // Replace 'any' with the actual type of installments
+  };
+}
+
+export interface DetailLoan {
+  id: string;
+  highlight: { label: string; value: any }[];
+  document: string;
+  termLoan: any[]; // Replace 'any' with the actual type of termLoan
+  borrower: { label: string; value: any }[];
+}
 
 export default defineComponent({
     components: {
@@ -56,38 +89,41 @@ export default defineComponent({
 
         const { data, loading , error, fetchData } = useDashboard();
 
-        const detailLoan = computed(() => {
-           const detail = data?.value?.find((items: any) => items.id === route.params.id)
+        const detailLoan = computed<DetailLoan | undefined>(() => {
+            const detailArray = data?.value as unknown as LoanData[];
+            const detail = detailArray?.find((items: LoanData) => items.id === route.params.id);
 
-           if (detail){
-               return {
-                   id: detail.id,
-                   highlight: [
-                   {label: "Amount", value: detail.amount},
-                   {label: "Interest Rate", value: detail.interestRate},
-                   {label: "Term", value: detail.term},
-                   {label: "Purpose", value: detail.purpose},
-                   {label: "Risk Rating", value: detail.riskRating}
-                   ],
-                   document: detail.documents[0].url,
-                   termLoan: detail.repaymentSchedule.installments,
-                   borrower: [
-                       { label: "Id", value: detail.borrower.id },
-                       { label: "Name", value: detail.borrower.name },
-                       { label: "Email", value: detail.borrower.email },
-                       { label: "Credit Score", value: detail.borrower.creditScore},
-                       { label: "Collateral", value: detail.collateral.type },
-                       { label:  "Value Collateral", value: detail.collateral.value }
-                   ]
-               }
-           }
-        })
+        if (detail) {
+            return {
+                id: detail.id,
+                highlight: [
+                { label: "Amount", value: detail.amount },
+                { label: "Interest Rate", value: detail.interestRate },
+                { label: "Term", value: detail.term },
+                { label: "Purpose", value: detail.purpose },
+                { label: "Risk Rating", value: detail.riskRating }
+                ],
+                document: detail.documents[0].url,
+                termLoan: detail?.repaymentSchedule?.installments as any[],
+                borrower: [
+                    { label: "Id", value: detail.borrower.id },
+                    { label: "Name", value: detail.borrower.name },
+                    { label: "Email", value: detail.borrower.email },
+                    { label: "Credit Score", value: detail.borrower.creditScore },
+                    { label: "Collateral", value: detail.collateral.type },
+                    { label: "Value Collateral", value: detail.collateral.value }
+                ]
+            };
+        }
+
+         return undefined;
+        });
 
         const downloadDocument = (code: string) => {
          window.open(code, '_blank', 'noreferrer')
       }
 
-        const columns = ref([
+        const columns = ref<QTableColumn[]>([
          { name: "dueDate", label: "Due Date", field: "dueDate", align: "center" },
          { name: "amountDue", label: "Amount Due", field: "amountDue", align: "center" },
         ]);

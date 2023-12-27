@@ -1,7 +1,7 @@
 <template>
  <div class="table">
    <div class="wrapper">
-        <CommonTable  :data="data" :loading="loading" :columns="columns" :extendHeader="extendHeader" :extendBody="extendBody" @detailLoan="detailLoan" filter action />
+        <CommonTable v-if="data" :data="data" :loading="loading" :columnsTable="columns" :extendHeader="extendHeader" :extendBody="extendBody" @detailLoan="detailBorrower" filter action />
    </div>
  </div>
 </template>
@@ -12,6 +12,8 @@ import {defineComponent, onMounted, ref} from 'vue'
 import { useRouter } from "vue-router"
 import useDashboard from "@/composables/useDashboard"
 import CommonTable from "@/components/common/Table.vue"
+import { QTableColumn } from 'quasar'
+
 
 export default defineComponent({
     components: {
@@ -22,9 +24,9 @@ export default defineComponent({
     const router = useRouter();
     const filter = ref("")
 
-    const { data, loading, error, fetchData} = useDashboard();
+    const { data , loading, error, fetchData} = useDashboard();
 
-    const columns = ref([
+    const columns = ref<QTableColumn[]>([
       { name: "id", label: "ID Transaction", field: "id", align: "center" },
       { name: "amount", label: "Loan Amount", field: "amount", align: "center", sortable: true },
       { name: "interestRate", label: "Interest Rate", field: "interestRate", align: "center", sortable: true },
@@ -39,7 +41,8 @@ export default defineComponent({
       { id: 1, field: "borrower", value: "name"},
     ])
 
-    const detailLoan = (index: any) => {
+  
+    const detailBorrower = (index: string | any) => {
         router.push(`/dashboard/loan/${index}`)
     }
 
@@ -53,7 +56,7 @@ export default defineComponent({
             loading,
             error,
             columns,
-            detailLoan,
+            detailBorrower,
             filter,
             extendHeader,
             extendBody

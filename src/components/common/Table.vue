@@ -1,8 +1,7 @@
 <template>
-    <q-table v-if="data" flat bordered :rows="data" :columns="columns" :filter="localFilter" row-key="id" :loading="loading">
+    <q-table v-if="data" flat bordered :rows="data" :columns="columnsTable" :filter="localFilter" row-key="id" :loading="loading">
       <template v-if="filter" v-slot:top>
         <span class="table-search">
-
           <input type="text" v-model="localFilter"  placeholder="Find ID Transaction" />
         </span>        
       </template>
@@ -12,7 +11,7 @@
           <q-th v-for="col in props.cols" :key="col.name" :props="props" >
             {{ col.label }}
           </q-th>
-          <q-th v-for="items in extendHeader" :key="items.id" :sortable="items.sortable">{{ items.value  }}</q-th>
+          <q-th v-for="items in extendHeader" :key="items.id">{{ items.value  }}</q-th>
           <q-th v-if="action">Action</q-th>
         </q-tr>
       </template>
@@ -24,12 +23,12 @@
           <q-td v-for="col in props.cols" :key="col.name" :props="props">
             {{ col.value }}
           </q-td>
-           <q-td v-for="items in extendBody" :key="items.id" class="text-center" auto-width>
+          <q-td  v-for="items in extendBody"  :key="items.id" class="text-center" auto-width>
               <span v-if="items.field">{{ props.row[items.field][items.value] }}</span>
               {{ props.row[items.value] }}
           </q-td>
           <q-td v-if="action" class="text-center">
-              <q-btn @click="$emit('detailLoan', props.row.id)" push color="primary" label="Detail" />
+              <q-btn @click="detailBorrower(props.row.id)" push color="primary" label="Detail" />
           </q-td>
         </q-tr>
       </template>
@@ -43,17 +42,36 @@
 
 <script lang="ts">
 
-import { defineComponent, ref} from "vue"
+import { defineComponent, PropType, ref} from "vue"
+import { QTableProps } from 'quasar'
+
+
+export interface ExtendHeader {
+    id: any;
+    value: string;
+}
+
+export interface ExtendBody {
+  id: number;
+  field: string
+  value: string;
+}
+
+export interface DataDetailLoan {
+  dueDate: any;
+  amountDue: any;
+}
+
 
 export default defineComponent({
     props: {
         data: {
             required: false,
-            type: Array || null,
+            type: Array as PropType<QTableProps['rows']> | any,
         },
-        columns: {
-            required: true,
-            type: Array,
+        columnsTable: {
+            required: false,
+            type: Array as PropType<QTableProps['columns']>,
         },
         action: {
             required: false,
@@ -65,11 +83,11 @@ export default defineComponent({
         },
         extendHeader: {
             required: false,
-            type: Array
+            type: Array as PropType<ExtendHeader[]>,
         },
         extendBody:{
             required: false,
-            type: Array
+            type: Array as PropType<ExtendBody[]>,
         },
         loading: {
             required: false,
@@ -80,13 +98,20 @@ export default defineComponent({
           type: String || Object || Array || null
         }
     },
+    emits: {
+      detailLoan: null,
+    },
     setup(props, { emit }){
 
-        
+        const detailBorrower = (index: any) => {
+            emit('detailLoan', index)
+        }
+
         const localFilter = ref("")
        
         return {
-            localFilter
+            localFilter,
+            detailBorrower
         }
     }
 })
