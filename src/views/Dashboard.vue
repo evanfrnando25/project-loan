@@ -1,6 +1,7 @@
 <template>
  <div class="table">
    <div class="wrapper">
+     <h1>asd</h1>
         <CommonTable v-if="data" :data="data" :loading="loading" :columnsTable="columns" :extendHeader="extendHeader" :extendBody="extendBody" @detailLoan="detailBorrower" filter action />
    </div>
  </div>
